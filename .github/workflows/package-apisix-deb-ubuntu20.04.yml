@@ -2,17 +2,15 @@ name: package apisix deb for ubuntu 20.04(Focal Fossa)
 
 on:
   push:
-    branches: [ master ]
+    branches: [ * ]
     tags:
       - "v*"
     paths-ignore:
       - '*.md'
   pull_request:
-    branches: [ master ]
+    branches: [ * ]
     paths-ignore:
       - '*.md'
-  schedule:
-    - cron: '0 0 * * *'
 
 jobs:
   build:
@@ -36,6 +34,7 @@ jobs:
       - name: install apisix deb into container
         run: |
           docker build -t apache/apisix:${PACKAGE_APISIX_VERSION}-deb-test --build-arg APISIX_VERSION=${PACKAGE_APISIX_VERSION} -f test/apisix/Dockerfile.test.apisix.deb.ubuntu20.04 .
+          docker save apache/apisix:${PACKAGE_APISIX_VERSION}-deb-test -o output/apisix-${PACKAGE_APISIX_VERSION}-deb-test.tar
 
       - name: start apisix and test
         run: |
@@ -61,7 +60,7 @@ jobs:
       - name: Publish Artifact
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: apisix_${{ env.PACKAGE_APISIX_VERSION }}-0~ubuntu20.04_amd64.deb
-          path: output/apisix_${{ env.PACKAGE_APISIX_VERSION }}-0~ubuntu20.04_amd64.deb
+          name: apisix-${PACKAGE_APISIX_VERSION}-deb-test.tar
+          path: output/apisix-${PACKAGE_APISIX_VERSION}-deb-test.tar
           retention-days: 5
           if-no-files-found: error
