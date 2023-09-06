@@ -49,8 +49,8 @@ install_stap_tools() {
 EOF
 
     apt-get update
-    apt-get install linux-image-$(uname -r)-dbgsym
-    apt install elfutils libdw-dev
+    apt-get install -y linux-image-$(uname -r)-dbgsym
+    apt install -y elfutils libdw-dev
     apt-get install -y python3-setuptools python3-wheel
 
     # install systemtap
