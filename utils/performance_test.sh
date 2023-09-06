@@ -39,19 +39,19 @@ install_wrk2() {
 
 install_stap_tools() {
     # install ddeb source repo
-    sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C8CAB6595FDFF622
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C8CAB6595FDFF622
 
     codename=$(lsb_release -c | awk  '{print $2}')
-    sudo tee /etc/apt/sources.list.d/ddebs.list << EOF
+    tee /etc/apt/sources.list.d/ddebs.list << EOF
     deb http://ddebs.ubuntu.com/ ${codename}      main restricted universe multiverse
     deb http://ddebs.ubuntu.com/ ${codename}-updates  main restricted universe multiverse
     deb http://ddebs.ubuntu.com/ ${codename}-proposed main restricted universe multiverse
 EOF
 
-    sudo apt-get update
-    sudo apt-get install linux-image-$(uname -r)-dbgsym
-    sudo apt install elfutils libdw-dev
-    sudo apt-get install -y python3-setuptools python3-wheel
+    apt-get update
+    apt-get install linux-image-$(uname -r)-dbgsym
+    apt install elfutils libdw-dev
+    apt-get install -y python3-setuptools python3-wheel
 
     # install systemtap
     cd /usr/local/
@@ -59,7 +59,7 @@ EOF
     tar -zxf systemtap-4.6.tar.gz
     mv systemtap-4.6 systemtap
     cd systemtap
-    ./configure && make all && sudo make install &&  stap --version
+    ./configure && make all && make install &&  stap --version
     cd ..
 
     # see https://github.com/openresty/stapxx/pull/48
@@ -70,7 +70,7 @@ EOF
 
 
 run_performance_test() {
-    sudo chmod -R 777 ./
+    chmod -R 777 ./
     ulimit -n 10240
 
     pip3 install -r utils/perf-requirements.txt --user
@@ -92,10 +92,10 @@ run_performance_test() {
     # FlameGraph
     export PATH=/usr/local/FlameGraph:$PATH
 
-    sudo env PATH=$PATH /usr/local/stapxx/samples/lj-lua-stacks.sxx --arg time=30 --skip-badvars -x $(pgrep -P $(cat logs/nginx.pid) -n -f worker) > /tmp/tmp.bt
-    sudo env PATH=$PATH /usr/local/openresty-systemtap-toolkit/fix-lua-bt /tmp/tmp.bt > /tmp/flame.bt
-    sudo env PATH=$PATH /usr/local/FlameGraph/stackcollapse-stap.pl /tmp/flame.bt > /tmp/flame.cbt
-    sudo env PATH=$PATH /usr/local/FlameGraph/flamegraph.pl /tmp/flame.cbt > $PWD/output/flamegraph.svg
+    env PATH=$PATH /usr/local/stapxx/samples/lj-lua-stacks.sxx --arg time=30 --skip-badvars -x $(pgrep -P $(cat logs/nginx.pid) -n -f worker) > /tmp/tmp.bt
+    env PATH=$PATH /usr/local/openresty-systemtap-toolkit/fix-lua-bt /tmp/tmp.bt > /tmp/flame.bt
+    env PATH=$PATH /usr/local/FlameGraph/stackcollapse-stap.pl /tmp/flame.bt > /tmp/flame.cbt
+    env PATH=$PATH /usr/local/FlameGraph/flamegraph.pl /tmp/flame.cbt > $PWD/output/flamegraph.svg
 }
 
 case_opt=$1
