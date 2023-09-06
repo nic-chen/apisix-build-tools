@@ -45,10 +45,13 @@ jobs:
             -p 9180:9180 -p 9080:9080 -p 9443:9443 apache/apisix:${PACKAGE_APISIX_VERSION}-deb-test
 
           docker exec apisix-${PACKAGE_APISIX_VERSION}-deb-test \
-            bash -c "utils/performance_test.sh install_wrk2"
+            bash -c "pwd && ls -l"
 
           docker exec apisix-${PACKAGE_APISIX_VERSION}-deb-test \
-            bash -c "utils/performance_test.sh install_stap_tools"
+            bash -c "/usr/local/apisix/utils/performance_test.sh install_wrk2"
+
+          docker exec apisix-${PACKAGE_APISIX_VERSION}-deb-test \
+            bash -c "/usr/local/apisix/utils/performance_test.sh install_stap_tools"
 
           sleep 20
           curl http://127.0.0.1:9180/apisix/admin/routes/1 \
