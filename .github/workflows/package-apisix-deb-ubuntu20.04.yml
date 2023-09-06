@@ -61,7 +61,7 @@ jobs:
       - name: Publish Artifact
         uses: actions/upload-artifact@v2.2.4
         with:
-          name: apisix-${PACKAGE_APISIX_VERSION}-deb-test.tar
-          path: output/apisix-${PACKAGE_APISIX_VERSION}-deb-test.tar
+          name: apisix-${{ env.PACKAGE_APISIX_VERSION }}-deb-test.tar
+          path: output/apisix-${{ env.PACKAGE_APISIX_VERSION }}-deb-test.tar
           retention-days: 5
           if-no-files-found: error
